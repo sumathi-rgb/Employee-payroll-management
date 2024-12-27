@@ -1,0 +1,132 @@
+#include <stdio.h>
+#include <string.h>
+
+// Structure to represent an employee
+struct Employee {
+int empID;
+char name[50];
+char position[50];
+float salary;
+float allowance;
+float deduction;
+};
+
+// Function to add an employee
+void addEmployee(struct Employee *employees, int *count) {
+printf("Enter Employee ID: ");
+scanf("%d", &employees[*count].empID);
+getchar(); // Consume newline character left by scanf
+
+printf("Enter Employee Name: ");
+fgets(employees[*count].name, 50, stdin);
+employees[*count].name[strcspn(employees[*count].name, "\n")] = '\0'; // Remove newline character
+
+printf("Enter Position: ");
+fgets(employees[*count].position, 50, stdin);
+employees[*count].position[strcspn(employees[*count].position, "\n")] = '\0'; // Remove newline character
+
+printf("Enter Salary: ");
+scanf("%f", &employees[*count].salary);
+
+printf("Enter Allowance: ");
+scanf("%f", &employees[*count].allowance);
+
+printf("Enter Deduction: ");
+scanf("%f", &employees[*count].deduction);
+
+(*count)++;
+printf("Employee added successfully!\n");
+}
+
+// Function to display all employees
+void displayEmployees(struct Employee *employees, int count) {
+if (count == 0) {
+printf("No employees in the system.\n");
+} else {
+printf("\nEmployee Details:\n");
+printf("ID\tName\t\tPosition\t\tSalary\t\tNet Pay\n");
+printf("-------------------------------------------------------------------------\n");
+for (int i = 0; i < count; i++) {
+float netPay = employees[i].salary + employees[i].allowance - employees[i].deduction;
+printf("%d\t%s\t\t%s\t\t%.2f\t\t%.2f\n", employees[i].empID, employees[i].name, employees[i].position, employees[i].salary, netPay);
+}
+}
+}
+
+// Function to update an employee's salary
+void updateSalary(struct Employee *employees, int count) {
+int id;
+printf("Enter Employee ID to update salary: ");
+scanf("%d", &id);
+
+int found = 0;
+for (int i = 0; i < count; i++) {
+if (employees[i].empID == id) {
+printf("Current Salary: %.2f\n", employees[i].salary);
+printf("Enter New Salary: ");
+scanf("%f", &employees[i].salary);
+printf("Salary updated successfully!\n");
+found = 1;
+break;
+}
+}
+
+if (!found) {
+printf("Employee not found.\n");
+}
+}
+
+// Function to calculate and display payroll
+void calculatePayroll(struct Employee *employees, int count) {
+if (count == 0) {
+printf("No employees in the system.\n");
+} else {
+printf("\nPayroll Details:\n");
+printf("ID\tName\t\tGross Pay\tDeductions\tNet Pay\n");
+printf("---------------------------------------------------------------\n");
+for (int i = 0; i < count; i++) {
+float grossPay = employees[i].salary + employees[i].allowance;
+float netPay = grossPay - employees[i].deduction;
+printf("%d\t%s\t\t%.2f\t\t%.2f\t\t%.2f\n", employees[i].empID, employees[i].name, grossPay, employees[i].deduction, netPay);
+}
+}
+}
+
+int main() {
+struct Employee employees[100]; // Array to store employee data
+int count = 0; // Number of employees in the system
+int choice;
+
+while (1) {
+printf("\nEmployee Payroll Management System\n");
+printf("1. Add Employee\n");
+printf("2. Display All Employees\n");
+printf("3. Update Employee Salary\n");
+printf("4. Calculate Payroll\n");
+printf("5. Exit\n");
+printf("Enter your choice: ");
+scanf("%d", &choice);
+
+switch (choice) {
+case 1:
+addEmployee(employees, &count);
+break;
+case 2:
+displayEmployees(employees, count);
+break;
+case 3:
+updateSalary(employees, count);
+break;
+case 4:
+calculatePayroll(employees, count);
+break;
+case 5:
+printf("Exiting system...\n");
+return 0;
+default:
+printf("Invalid choice. Please try again.\n");
+}
+}
+
+return 0;
+}
